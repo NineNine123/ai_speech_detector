@@ -1,1 +1,11 @@
+.DS_Store
 venv/
+__pycache__/
+*.wav
+*.mp3
+*.flac
+*.npy
+*.pkl
+*.pt
+data/raw/
+data/processed/
