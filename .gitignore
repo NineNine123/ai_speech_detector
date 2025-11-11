@@ -1,11 +1,21 @@
-.DS_Store
-venv/
+# Bytecode and caches
 __pycache__/
+*.pyc
+*.pyo
+
+# Models & data
+models/
+data/
+features/
+web_app/temp_files/
+
+# Whisper cache
+~/.cache/
 *.wav
-*.mp3
-*.flac
-*.npy
-*.pkl
-*.pt
-data/raw/
-data/processed/
+
+# IDE & system files
+.vscode/
+.DS_Store
+
+# Streamlit stuff
+.streamlit/
