@@ -1,11 +1,65 @@
+# -------------------------
+# OS & editor junk
+# -------------------------
 .DS_Store
+Thumbs.db
+
+# -------------------------
+# Python cache and environments
+# -------------------------
 venv/
+.env/
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# -------------------------
+# Audio & large data files
+# -------------------------
 *.wav
 *.mp3
 *.flac
+*.m4a
+
+# -------------------------
+# Model & feature artifacts
+# -------------------------
 *.npy
 *.pkl
 *.pt
+models/
+features/
+
+# -------------------------
+# Whisper cache
+# -------------------------
+whisper/
+
+# -------------------------
+# Streamlit runtime cache
+# -------------------------
+.streamlit/
+web_app/temp_files/
+
+# -------------------------
+# Data folders
+# -------------------------
 data/raw/
 data/processed/
+data/transcripts/
+
+# -------------------------
+# Jupyter & temp files
+# -------------------------
+.ipynb_checkpoints/
+*.log
+*.tmp
+*.bak
+
+# -------------------------
+# Build & packaging
+# -------------------------
+build/
+dist/
+*.egg-info/
