@@ -1,0 +1,1 @@
+You're extracting a frame and you're analyzing what objects are in a frame. Sometimes we can even do, because speech recognition is very commoditized, we can even extract transcripts from video and analyze the dialogue and analyze the language part of video. But neither is fully sufficient because if you think about the way we

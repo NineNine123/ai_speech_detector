@@ -1,0 +1,1 @@
+This is a way, so this is an overview of how a video foundation model would work. In the case of 12 labs, we have two models, we have our Marengo model. And think of Marengo as a way of creating this first memory of video. So the AI will see here and kind of understand and almost create this memory.

@@ -1,0 +1,1 @@
+easily search and find exact moments across your library. Then we have our second model, which is called Pegasus. We like to name our models after horses, in this case it's a fiction. Very horse, but Pegasus allows you to then reason on top of the memory that Murengo has created. And so these two work together to enable
