@@ -1,3 +1,6 @@
+
+from audio_recorder_streamlit import audio_recorder   # 🔴 NEW IMPORT
+
 import os
 import sys
 import numpy as np
@@ -57,6 +60,83 @@ whisper_model = load_whisper()
 # -------------------- File Upload --------------------
 uploaded_file = st.file_uploader("Upload an audio file", type=["wav", "mp3", "m4a", "flac"])
 
+
+# -------------------- Record Audio Section --------------------
+st.markdown("### 🎙️ Record Your Voice (Optional)")
+st.caption("Click below to start and stop recording")
+
+if "recorded_audio" not in st.session_state:
+    st.session_state.recorded_audio = None
+
+recorded_audio = audio_recorder(
+    pause_threshold=25.0,  # keeps recording until 2 seconds of silence
+    sample_rate=16000,
+    energy_threshold=(-1.0, 1.0)
+)
+
+# If new audio is recorded, save it to session state
+if recorded_audio:
+    st.session_state.recorded_audio = recorded_audio
+
+# Use the saved audio
+if st.session_state.recorded_audio:
+    st.audio(st.session_state.recorded_audio, format="audio/wav")
+
+    record_path = os.path.join("web_app", "temp_files", "recorded_audio.wav")
+    os.makedirs(os.path.dirname(record_path), exist_ok=True)
+
+    # Save the recorded audio file
+    with open(record_path, "wb") as f:
+        f.write(st.session_state.recorded_audio)
+
+    if st.button("🚀 Analyze Recorded Audio"):
+        st.info("⏳ Processing recorded audio... Please wait...")
+        temp_input = record_path
+        processed_path = os.path.join("web_app", "temp_files", "temp_processed.wav")
+
+        # Step 1 — Preprocess
+        success = preprocess_audio(temp_input, processed_path)
+        if not success or not os.path.exists(processed_path):
+            st.error("❌ Failed to preprocess audio.")
+            st.stop()
+
+        # Step 2 — Transcribe
+        try:
+            transcript = whisper_model.transcribe(processed_path)["text"]
+        except Exception as e:
+            st.error(f"⚠️ Transcription failed: {e}")
+            st.stop()
+
+        # Step 3 — Extract Features
+        mel, audio_vec = extract_audio_features(processed_path)
+        text_vec = extract_text_features(transcript)
+
+        if audio_vec is None or text_vec is None:
+            st.error("⚠️ Feature extraction failed.")
+            st.stop()
+
+        # Step 4 — Scale Features
+        text_scaled = text_scaler.transform([text_vec])
+        audio_scaled = acoustic_scaler.transform([audio_vec])
+
+        # Step 5 — Predict
+        text_prob = text_model.predict_proba(text_scaled)[0][1]
+        audio_prob = acoustic_model.predict_proba(audio_scaled)[0][1]
+        combined_prob = 0.3 * text_prob + 0.7 * audio_prob
+        human_percent = combined_prob * 100
+
+        # Step 6 — Display Result
+        st.subheader("🧠 Human-Likeness Estimate (Recorded Audio)")
+        st.metric("Human-likeness", f"{human_percent:.2f}%")
+        st.progress(int(human_percent))
+
+        # Step 7 — Cleanup
+        for f in [temp_input, processed_path]:
+            try:
+                os.remove(f)
+            except Exception:
+                pass
+#-------------------------------------------------------------
 if uploaded_file:
     st.audio(uploaded_file)
     process_btn = st.button("🚀 Analyze Human-Likeness")
